@@ -1,114 +1,156 @@
-import {createStackNavigator} from '@react-navigation/stack';
-import { createDrawerNavigator } from '@react-navigation/drawer';
-import { NavigationContainer,useNavigation } from '@react-navigation/native';
-import ActionButton from 'react-native-action-button';
-import SQLite from 'react-native-sqlite-storage';
+/**
+ * Sample React Native App
+ * https://github.com/facebook/react-native
+ *
+ * @format
+ * @flow strict-local
+ */
+
 import React from 'react';
 import {
-  SafeAreaView,
   StyleSheet,
-  ScrollView,
   View,
-  Text,
-  StatusBar,
-  Button,
-  Image,
-  TouchableWithoutFeedback
+  TouchableWithoutFeedback,
+  Image
 } from 'react-native';
+import { NavigationContainer} from "@react-navigation/native";
+import { createDrawerNavigator } from '@react-navigation/drawer';
+import  SQLite   from 'react-native-sqlite-storage';
+import BarangScreen from './screens/barang/BarangScreen'
+import KategoriScreen from './screens/kategori/KategoriScreen';
+import PelangganScreen from './screens/pelanggan/Pelanggan';
+import PenjualanScreen from './screens/Penjualan/ChekoutScreen'
+import Mydrawer from './components/Mydrawer';
 
-import {
-  Colors,
-} from 'react-native/Libraries/NewAppScreen';
-import PelangganScreen from './screens/Pelanggan';
-import TambahPelangganScreen from './screens/TambahPelanggan';
-import { TouchableOpacity } from 'react-native-gesture-handler';
-const Drawer = createDrawerNavigator(); 
-const Stack = createStackNavigator();
 
-const App = () => {
+const Drawer = createDrawerNavigator();
+
+const App = () =>  {
+
   global.db = SQLite.openDatabase({
     name: 'dbkasir',
-    // location: 'default',
-    location: 'default',
-    createFromLocation: '~dbkasir.db'
-  }, ()=>{
-    console.log('Database Opened');
-  },(error)=>{
-    console.log('Error:'+ error.message);
+    createFromLocation: '~/dbkasir.db'
+  }, () => {
+    console.log('DB Opened');
+  }, (error) =>{
+    console.log('Error : ' +error.massage);
   })
+
   return (
     <NavigationContainer>
-    <Drawer.Navigator>
-      <Drawer.Screen name="Pelanggan" 
-      component={PelangganScreen} 
-      options={({ navigation }) => {
-        return {
-          headerShown: true,
-          headerTitle: 'Pelanggan',
-          headerTitleAlign: 'center',
-          headerTitleStyle: {color: '#275f96'},
-          headerLeft: () => 
-          <View style={{
-                  marginLeft: 10
-                 }}>
-                 <TouchableWithoutFeedback onPress={()=>{navigation.toggleDrawer()}}>
-                   <Image
-                   source={
-                     require('./src/img/icon/menu.png')
-                   }
-                   style={styles.navbar}
-                 />
-             </TouchableWithoutFeedback>
-               </View>
-        }
-      }} 
-      />
-    </Drawer.Navigator>
+      <Drawer.Navigator drawerContent={props => <Mydrawer {... props} />}>
+          <Drawer.Screen 
+            name="barang"
+            component={BarangScreen}
+            options={ ({navigation}) => {
+              return{ 
+                headerShown: true, 
+                headerTitle: 'Barang',
+                headerTitleAlign: 'center',
+                headerTintColor: '#275f96',
+                headerLeft: () => (
+                  <View style={{
+                    marginLeft: 10
+                  }}>
+                    <TouchableWithoutFeedback onPress={()=> navigation.toggleDrawer()}>
+                      <Image
+                        source={require('./src/img/icon/menu.png')}
+                        style={styles.navbar}
+                      />
+                    </TouchableWithoutFeedback>
+                  </View>
+                )
+              }
+            }
+            } 
+          />
+        <Drawer.Screen
+          name="Kategori"
+          component={KategoriScreen}
+          options={({navigation}) => {
+            return {
+              headerShown: true,
+              headerTitle: 'Kategori',
+              headerTitleAlign: 'center',
+              headerTitleStyle: {color: '#275f96'},
+              headerLeft: () => (
+                <View
+                  style={{
+                    marginLeft: 10,
+                  }}>
+                  <TouchableWithoutFeedback
+                    onPress={() => {
+                      navigation.toggleDrawer();
+                    }}>
+                    <Image
+                      source={require('./src/img/icon/menu.png')}
+                      style={styles.navbar}
+                    />
+                  </TouchableWithoutFeedback>
+                </View>
+              ),
+            };
+          }}
+        />
+        <Drawer.Screen name="Pelanggan" 
+        component={PelangganScreen} 
+        options={({ navigation }) => {
+          return {
+            headerShown: true,
+            headerTitle: 'Pelanggan',
+            headerTitleAlign: 'center',
+            headerTitleStyle: {color: '#275f96'},
+            headerLeft: () => 
+            <View style={{
+                    marginLeft: 10
+                  }}>
+                  <TouchableWithoutFeedback onPress={()=>{navigation.toggleDrawer()}}>
+                    <Image
+                    source={
+                      require('./src/img/icon/menu.png')
+                    }
+                    style={styles.navbar}
+                  />
+              </TouchableWithoutFeedback>
+                </View>
+          }
+        }} 
+        />
+        <Drawer.Screen name="Penjualan" 
+        component={PenjualanScreen} 
+        options={({ navigation }) => {
+          return {
+            headerShown: true,
+            headerTitle: 'Penjualan',
+            headerTitleAlign: 'center',
+            headerTitleStyle: {color: '#275f96'},
+            headerLeft: () => 
+            <View style={{
+                    marginLeft: 10
+                  }}>
+                  <TouchableWithoutFeedback onPress={()=>{navigation.toggleDrawer()}}>
+                    <Image
+                    source={
+                      require('./src/img/icon/menu.png')
+                    }
+                    style={styles.navbar}
+                  />
+              </TouchableWithoutFeedback>
+                </View>
+          }
+        }} 
+        />
+      </Drawer.Navigator>
   </NavigationContainer>
   );
 };
 
-const styles = StyleSheet.create({
-  scrollView: {
-    backgroundColor: Colors.lighter,
-  },
-  engine: {
-    position: 'absolute',
-    right: 0,
-  },
-  body: {
-    backgroundColor: Colors.white,
-  },
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-    color: Colors.black,
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-    color: Colors.dark,
-  },
-  highlight: {
-    fontWeight: '700',
-  },
-  footer: {
-    color: Colors.dark,
-    fontSize: 12,
-    fontWeight: '600',
-    padding: 4,
-    paddingRight: 12,
-    textAlign: 'right',
-  },
+const styles = StyleSheet.create({ 
   navbar:{
     height: 25,
     width: 25,
+    margin: 5,
   },
-});
+})
 
 export default App;
