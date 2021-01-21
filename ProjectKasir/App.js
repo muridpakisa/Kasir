@@ -7,35 +7,17 @@
  */
 
 import React from 'react';
-import {
-  SafeAreaView,
-  StyleSheet,
-  ScrollView,
-  View,
-  Text,
-  StatusBar,
-  Button,
-  Image,
-  TouchableOpacity,
-} from 'react-native';
-
-import {
-  Header,
-  LearnMoreLinks,
-  Colors,
-  DebugInstructions,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
-import {createDrawerNavigator} from '@react-navigation/drawer';
+import {StyleSheet, View, TouchableWithoutFeedback, Image} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
-import {createStackNavigator} from '@react-navigation/stack';
-import Anjay from './Screens/KategoriScreen';
-import Insertt from './Screens/InsertKategori';
+import {createDrawerNavigator} from '@react-navigation/drawer';
 import SQLite from 'react-native-sqlite-storage';
-import Flat from './Screens/Flatlist';
+import BarangScreen from './screens/barang/BarangScreen';
+import KategoriScreen from './screens/kategori/KategoriScreen';
+import PelangganScreen from './screens/pelanggan/Pelanggan';
+import Mydrawer from './components/Mydrawer';
+import CartScreen from './screens/cart/Cart';
 
 const Drawer = createDrawerNavigator();
-const Stack = createStackNavigator();
 
 const App = () => {
   global.db = SQLite.openDatabase(
@@ -44,18 +26,46 @@ const App = () => {
       createFromLocation: '~/dbkasir.db',
     },
     () => {
-      console.log('Database Opened');
+      console.log('DB Opened');
     },
     (error) => {
-      console.log('Error: ' + error.message);
+      console.log('Error : ' + error.massage);
     },
   );
+
   return (
     <NavigationContainer>
-      <Drawer.Navigator initialRouteName="Home">
+      <Drawer.Navigator drawerContent={(props) => <Mydrawer {...props} />}>
+        <Drawer.Screen
+          name="barang"
+          component={BarangScreen}
+          options={({navigation}) => {
+            return {
+              headerShown: true,
+              headerTitle: 'Barang',
+              headerTitleAlign: 'center',
+              headerTintColor: '#275f96',
+              headerLeft: () => (
+                <View
+                  style={{
+                    marginLeft: 10,
+                  }}>
+                  <TouchableWithoutFeedback
+                    onPress={() => navigation.toggleDrawer()}>
+                    <Image
+                      source={require('./src/img/icon/menu.png')}
+                      style={styles.navbar}
+                    />
+                  </TouchableWithoutFeedback>
+                </View>
+              ),
+            };
+          }}
+        />
+
         <Drawer.Screen
           name="Kategori"
-          component={Anjay}
+          component={KategoriScreen}
           options={({navigation}) => {
             return {
               headerShown: true,
@@ -67,15 +77,73 @@ const App = () => {
                   style={{
                     marginLeft: 10,
                   }}>
-                  <TouchableOpacity
+                  <TouchableWithoutFeedback
                     onPress={() => {
                       navigation.toggleDrawer();
                     }}>
                     <Image
-                      source={require('./img/menu.png')}
+                      source={require('./src/img/icon/menu.png')}
                       style={styles.navbar}
                     />
-                  </TouchableOpacity>
+                  </TouchableWithoutFeedback>
+                </View>
+              ),
+            };
+          }}
+        />
+
+        <Drawer.Screen
+          name="Pelanggan"
+          component={PelangganScreen}
+          options={({navigation}) => {
+            return {
+              headerShown: true,
+              headerTitle: 'Pelanggan',
+              headerTitleAlign: 'center',
+              headerTitleStyle: {color: '#275f96'},
+              headerLeft: () => (
+                <View
+                  style={{
+                    marginLeft: 10,
+                  }}>
+                  <TouchableWithoutFeedback
+                    onPress={() => {
+                      navigation.toggleDrawer();
+                    }}>
+                    <Image
+                      source={require('./src/img/icon/menu.png')}
+                      style={styles.navbar}
+                    />
+                  </TouchableWithoutFeedback>
+                </View>
+              ),
+            };
+          }}
+        />
+
+        <Drawer.Screen
+          name="Cart"
+          component={CartScreen}
+          options={({navigation}) => {
+            return {
+              headerShown: true,
+              headerTitle: 'Cart',
+              headerTitleAlign: 'center',
+              headerTitleStyle: {color: '#275f96'},
+              headerLeft: () => (
+                <View
+                  style={{
+                    marginLeft: 10,
+                  }}>
+                  <TouchableWithoutFeedback
+                    onPress={() => {
+                      navigation.toggleDrawer();
+                    }}>
+                    <Image
+                      source={require('./src/img/icon/menu.png')}
+                      style={styles.navbar}
+                    />
+                  </TouchableWithoutFeedback>
                 </View>
               ),
             };
@@ -87,51 +155,10 @@ const App = () => {
 };
 
 const styles = StyleSheet.create({
-  scrollView: {
-    backgroundColor: Colors.lighter,
-  },
   navbar: {
     height: 25,
     width: 25,
-  },
-  engine: {
-    position: 'absolute',
-    right: 0,
-  },
-  body: {
-    backgroundColor: Colors.white,
-  },
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-    color: Colors.black,
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-    color: Colors.dark,
-  },
-  highlight: {
-    fontWeight: '700',
-  },
-  footer: {
-    color: Colors.dark,
-    fontSize: 12,
-    fontWeight: '600',
-    padding: 4,
-    paddingRight: 12,
-    textAlign: 'right',
-  },
-  iconm: {
-    width: 20,
-    height: 30,
-    resizeMode: 'contain',
-    margin: 15,
+    margin: 5,
   },
 });
 
